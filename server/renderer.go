@@ -1,9 +1,8 @@
-package main
+package server
 
 import (
 	"context"
 	"net/http"
-
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin/render"
 )
