@@ -1,0 +1,47 @@
+package component
+
+import "todo-app/database"
+import "fmt"
+
+templ TodoList(todos [ ]database.Todo) {
+	<ul id="todo-list">
+		for _, todo := range todos {
+			<li>
+				<div>
+					<p>Category: { todo.Category }</p>
+					<p>Title: { todo.Title }</p>
+					<p>Description: { todo.Description }</p>
+					<p>State: { todo.State }</p>
+					<button type="button" hx-get={ fmt.Sprintf("/todo/delete/%d", todo.Id) } hx-target="closest li" hx-swap="outerHTML">Delete</button>
+				</div>
+			</li>
+		}
+	</ul>
+}
+
+templ todoAddForm() {
+	<form action="/todo/add" method="post" hx-post="/todo/add" hx-swap="outerHTML" hx-target="#todo-list">
+		<label for="category">Category:</label>
+		<input type="text" name="category"/>
+		<br/>
+		<label for="title">Title:</label>
+		<input type="text" name="title"/>
+		<br/>
+		<label for="description">Description:</label>
+		<input type="text" name="description"/>
+		<br/>
+		<label for="state">State:</label>
+		<input type="text" name="state"/>
+		<br/>
+		<input type="submit" value="Create"/>
+	</form>
+}
+
+templ TodoDisplay() {
+	<div>
+		<div id="todo-list" hx-get="/todo/get/all" hx-trigger="load" hx-swap="outerHTML">
+			Todo list
+		</div>
+		@todoAddForm()
+	</div>
+}

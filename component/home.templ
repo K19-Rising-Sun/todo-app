@@ -1,0 +1,32 @@
+package component
+
+templ loginForm() {
+	<div>
+		<form action="/auth/login" method="post">
+			<label for="username">Username:</label>
+			<input type="text" name="username"/>
+			<br/>
+			<label for="password">Password:</label>
+			<input type="password" name="password"/>
+			<br/>
+			<input type="submit" value="Login"/>
+		</form>
+	</div>
+}
+
+templ Home(is_authenticated bool) {
+	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+	if !is_authenticated {
+		<div>
+			<a href="/register">Register</a>
+			@loginForm()
+		</div>
+	} else {
+		<div>
+			<form action="/logout" method="get">
+				<button type="submit" value="Logout">Logout</button>
+			</form>
+			@TodoDisplay()
+		</div>
+	}
+}
