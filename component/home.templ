@@ -1,7 +1,9 @@
 package component
 
-templ loginForm() {
+templ Login() {
+	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
 	<div>
+		<a href="/register">Register</a>
 		<form action="/auth/login" method="post">
 			<label for="username">Username:</label>
 			<input type="text" name="username"/>
@@ -14,19 +16,12 @@ templ loginForm() {
 	</div>
 }
 
-templ Home(is_authenticated bool) {
+templ Home() {
 	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
-	if !is_authenticated {
-		<div>
-			<a href="/register">Register</a>
-			@loginForm()
-		</div>
-	} else {
-		<div>
-			<form action="/logout" method="get">
-				<button type="submit" value="Logout">Logout</button>
-			</form>
-			@TodoDisplay()
-		</div>
-	}
+	<div>
+		<form action="/logout" method="get">
+			<button type="submit" value="Logout">Logout</button>
+		</form>
+		@TodoDisplay()
+	</div>
 }
