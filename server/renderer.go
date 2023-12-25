@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"net/http"
+
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin/render"
 )
@@ -14,7 +15,6 @@ type TemplRender struct {
 
 func (t TemplRender) Render(w http.ResponseWriter) error {
 	t.WriteContentType(w)
-	w.WriteHeader(t.Code)
 	if t.Data != nil {
 		return t.Data.Render(context.Background(), w)
 	}
