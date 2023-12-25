@@ -7,9 +7,9 @@ import (
 
 var schema = `
 CREATE TABLE IF NOT EXISTS user (
-    username VARCHAR(250) NOT NULL PRIMARY KEY, 
-    password VARCHAR(250) NOT NULL
-);
+    username TEXT NOT NULL PRIMARY KEY, 
+    password TEXT NOT NULL
+ );
 CREATE TABLE IF NOT EXISTS todo (
     id INTEGER PRIMARY KEY, 
     username TEXT NOT NULL, 
@@ -17,7 +17,26 @@ CREATE TABLE IF NOT EXISTS todo (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     state TEXT NOT NULL
-)`
+);
+CREATE VIRTUAL TABLE IF NOT EXISTS todo_search using fts5 (category, title);
+
+CREATE TRIGGER IF NOT EXISTS insert_todo_trigger
+AFTER INSERT ON todo 
+BEGIN 
+INSERT OR IGNORE INTO todo_search (category, title) VALUES (NEW.category, NEW.title);
+END;
+
+CREATE TRIGGER IF NOT EXISTS update_todo_trigger
+AFTER UPDATE ON todo 
+BEGIN 
+UPDATE todo_search SET category = NEW.TITLE, title = NEW.TITLE WHERE id = NEW.id;
+END;
+
+CREATE TRIGGER IF NOT EXISTS delete_todo_trigger
+AFTER DELETE ON todo 
+BEGIN 
+DELETE FROM todo_search where rowid = OLD.rowid;
+END;`
 
 type User struct {
 	Username string `db:"username"`
