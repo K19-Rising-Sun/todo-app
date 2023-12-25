@@ -1,5 +1,6 @@
 **/*_templ.go
 **/*.db
 **/tmp
-node_modules/
-./todo-app-client/node_modules/
+**/node_modules
+.env
+**/static/js

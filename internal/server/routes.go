@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"todo-app/component"
-	"todo-app/database"
+	"todo-app/internal/database"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -16,6 +16,8 @@ var secret = []byte("todo-app")
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
+
+	r.Static("/static", "./static")
 
 	r.HTMLRender = &TemplRender{}
 	r.Use(sessions.Sessions("auth", cookie.NewStore(secret)))
@@ -102,7 +104,7 @@ func (s *Server) LoginHandler(c *gin.Context) {
 		return
 	}
 
-    c.Header("HX-Redirect", "/")
+	c.Header("HX-Redirect", "/")
 }
 func (s *Server) RegisterHandler(c *gin.Context) {
 	user := database.User{
@@ -124,7 +126,7 @@ func (s *Server) RegisterHandler(c *gin.Context) {
 		return
 	}
 
-    c.Header("HX-Redirect", "/")
+	c.Header("HX-Redirect", "/")
 }
 
 func (s *Server) TodoQueryHandler(c *gin.Context) {
@@ -137,24 +139,24 @@ func (s *Server) TodoQueryHandler(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 		// c.HTML(http.StatusUnauthorized, "", component.Error("Failed to get todo list"))
-        c.Status(http.StatusUnauthorized)
+		c.Status(http.StatusUnauthorized)
 		return
 	}
 
 	// c.HTML(http.StatusOK, "", component.TodoList(todos))
-    c.JSON(http.StatusOK, todos)
+	c.JSON(http.StatusOK, todos)
 }
 func (s *Server) TodoAddHandler(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("username").(string)
 
-    is_done, err := strconv.ParseBool(c.PostForm("is_done"))
+	is_done, err := strconv.ParseBool(c.PostForm("is_done"))
 	todo := database.Todo{
 		Username:    username,
 		Category:    c.PostForm("category"),
 		Title:       c.PostForm("title"),
 		Description: c.PostForm("description"),
-		IsDone:       is_done,
+		IsDone:      is_done,
 	}
 
 	created_todo, err := todo.Create(s.db)
@@ -172,14 +174,14 @@ func (s *Server) TodoAddHandler(c *gin.Context) {
 	// }
 
 	// c.HTML(http.StatusOK, "", component.TodoList(todos))
-    c.JSON(http.StatusOK, created_todo)
+	c.JSON(http.StatusOK, created_todo)
 }
 func (s *Server) TodoDeleteHandler(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)
 		// c.HTML(http.StatusBadRequest, "", component.Error("Invalid todo id"))
-        c.Status(http.StatusBadRequest)
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
@@ -189,9 +191,9 @@ func (s *Server) TodoDeleteHandler(c *gin.Context) {
 	if err := database.DeleteTodo(s.db, id, username); err != nil {
 		fmt.Println(err)
 		// c.HTML(http.StatusUnauthorized, "", component.Error("User does not own this todo"))
-        c.Status(http.StatusUnauthorized)
+		c.Status(http.StatusUnauthorized)
 		return
 	}
 
-    c.Status(http.StatusOK)
+	c.Status(http.StatusOK)
 }

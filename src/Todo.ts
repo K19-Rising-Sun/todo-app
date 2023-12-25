@@ -1,6 +1,6 @@
 import { addRemoveWarningTxtEvent } from "./Utils"
-import HTMLEditToDo from "./HTMLComponents/EditToDo"
-import HTMLTodo from "./HTMLComponents/ToDo"
+import HTMLEditToDo from "../component/EditTodo"
+import HTMLTodo from "../component/Todo"
 
 interface IToDoList{
     [index:string]:{
@@ -87,7 +87,7 @@ let EditApi = (toDoId :string)=> new Promise<boolean>((resolve,reject)=>
     setTimeout(() => {
         toDoList[toDoId]={...toDoList[toDoId],isEditing:false}
         resolve(true)
-    }, 1000)
+    }, 10)
 )
 
 let loadToDoFunc = (username: string)=>new Promise<boolean>((resolve)=>
@@ -119,7 +119,7 @@ let loadToDoFunc = (username: string)=>new Promise<boolean>((resolve)=>
         resolve(true)
     }, 1000)
 )
- 
+
 let deleteToDoFunc = (toDoId :string)=>new Promise<boolean>((resolve,reject)=>
     setTimeout(() => {
         delete toDoList[toDoId]
@@ -140,7 +140,7 @@ let addToDoFunc = (newToDo:IToDo)=>new Promise<boolean>((resolve)=>
         renderToDo()
         resolve(true)
     }, 1000)
-) 
+)
 
 let searchToDoFunc = (title:string, category:string)=> new Promise<boolean>((resolve)=>
     setTimeout(()=>{
@@ -211,7 +211,7 @@ function AddHTMLToDoEvents(HTMLToDo:HTMLElement,ToDoId: string):HTMLElement{
 function addEditToDoInputEvent(EditHTMLToDo:HTMLElement,ToDoId:string):HTMLElement{
     (EditHTMLToDo.querySelector('input[name="title"]') as HTMLInputElement).addEventListener('input',(e)=>{
         toDoList[ToDoId].title=(e.target as HTMLInputElement).value
-    });    
+    });
     (EditHTMLToDo.querySelector('input[name="category"]') as HTMLInputElement).addEventListener('input',(e)=>{
         toDoList[ToDoId].category=(e.target as HTMLInputElement).value
     });
@@ -360,7 +360,7 @@ async function initialLoad(){
 function addExitEvents(){
     const add_new_todo_container = document.querySelector(".add-new-todo-container") as HTMLElement
     const exit_icon = document.querySelector(".add-new-todo-container .exit-icon") as HTMLElement
-    
+
     exit_icon.addEventListener('click',()=>{
         add_new_todo_container.classList.toggle("show")
     })

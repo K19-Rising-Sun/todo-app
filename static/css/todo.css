@@ -1,26 +1,26 @@
-body{
-    font-family: 'Roboto', sans-serif;
+body {
+    font-family: "Roboto", sans-serif;
 }
 
-.main-container{
+.main-container {
     width: 100vw;
     max-height: 100vh;
     display: flex;
 }
 
-.todo-wrapper{
-   flex: 1;
-   display: flex;
-   flex-direction: column;
-   overflow: hidden;
-   height: 100vh;
+.todo-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh;
 }
 
-.todo-wrapper>h1{
+.todo-wrapper > h1 {
     text-align: center;
 }
 
-.search-section{
+.search-section {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,7 +29,7 @@ body{
     padding: 8px;
 }
 
-.search-bars{
+.search-bars {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,13 +37,12 @@ body{
     gap: 4px;
 }
 
-.search-bars input{
+.search-bars input {
     outline: none;
     border: none;
 }
 
-
-.todo-states{
+.todo-states {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,29 +51,29 @@ body{
     cursor: pointer;
 }
 
-.todo-states.all>.all-state{
+.todo-states.all > .all-state {
     color: var(--blue);
 }
 
-.todo-states.done>.done-state{
+.todo-states.done > .done-state {
     color: var(--blue);
 }
 
-.todo-states.undone>.undone-state{
+.todo-states.undone > .undone-state {
     color: var(--blue);
 }
 
-.todo-states p:hover{
+.todo-states p:hover {
     color: var(--blue);
 }
 
-.todo-section{
+.todo-section {
     position: relative;
     flex: 1;
     min-height: 250px;
 }
 
-.todo-container{
+.todo-container {
     height: 100%;
     padding: 12px 8px;
     background: rgb(90, 243, 166);
@@ -86,7 +85,8 @@ body{
     gap: 12px;
 }
 
-.todo,.add-todo{
+.todo,
+.add-todo {
     background-color: var(--dark-yellow);
     position: relative;
     max-width: 250px;
@@ -96,19 +96,20 @@ body{
     padding: 16px;
 }
 
-.todo.complete .todo-title,.todo.complete .description{
+.todo.complete .todo-title,
+.todo.complete .description {
     text-decoration: line-through;
 }
 
-.todo.complete .done-icon{
+.todo.complete .done-icon {
     color: var(--green);
 }
 
-.category{
+.category {
     color: var(--blue);
 }
 
-.todo-header{
+.todo-header {
     display: flex;
     justify-content: space-between;
     white-space: nowrap;
@@ -119,7 +120,7 @@ body{
     height: 50px;
 }
 
-.todo-title{
+.todo-title {
     overflow-x: scroll;
     overflow: auto;
     scrollbar-width: thin;
@@ -129,32 +130,30 @@ body{
     align-items: center;
 }
 
-
-.icons>span{
+.icons > span {
     cursor: pointer;
 }
 
-
-.edit-icon:hover{
+.edit-icon:hover {
     color: var(--blue);
 }
 
-.done-icon:hover{
+.done-icon:hover {
     color: var(--green);
 }
 
-.delete-icon:hover{
+.delete-icon:hover {
     color: var(--red);
 }
 
-.description{
+.description {
     overflow-y: scroll;
     overflow: auto;
     width: 100%;
     height: 65%;
 }
 
-.todo input[type="text"]{
+.todo input[type="text"] {
     background-color: var(--dark-yellow);
     width: 70%;
     border: none;
@@ -162,7 +161,9 @@ body{
     outline: none;
 }
 
-.todo textarea, .add-new-todo textarea, .add-new-todo input[type='text']{
+.todo textarea,
+.add-new-todo textarea,
+.add-new-todo input[type="text"] {
     background-color: var(--light-yellow);
     border: black 2px solid;
     outline: none;
@@ -171,12 +172,13 @@ body{
     resize: none;
 }
 
-.add-new-todo textarea, .add-new-todo input[type='text']{
+.add-new-todo textarea,
+.add-new-todo input[type="text"] {
     border-width: 1px;
     flex: 1;
 }
 
-.submit-btn{
+.submit-btn {
     background-color: var(--blue);
     color: white;
     padding: 8px 10px;
@@ -185,17 +187,17 @@ body{
     border-radius: 8px;
 }
 
-.add-todo{
+.add-todo {
     outline: none;
     border: none;
     cursor: pointer;
 }
 
-.add-todo:hover span{
+.add-todo:hover span {
     color: var(--blue);
 }
 
-.add-new-todo-container{
+.add-new-todo-container {
     width: 100vw;
     height: 100vh;
     display: none;
@@ -205,11 +207,11 @@ body{
     position: fixed;
 }
 
-.add-new-todo-container.show{
+.add-new-todo-container.show {
     display: flex;
 }
 
-.add-new-todo-container.show .black-screen{
+.add-new-todo-container.show .black-screen {
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -217,7 +219,7 @@ body{
     background: rgba(17, 17, 17, 0.322);
 }
 
-.add-new-todo{
+.add-new-todo {
     position: relative;
     background: var(--dark-yellow);
     border-radius: 8px;
@@ -231,32 +233,29 @@ body{
     z-index: 4;
 }
 
-
-.add-new-todo .input-container{
+.add-new-todo .input-container {
     width: 100%;
 }
 
-.add-new-todo .warning-txt{
+.add-new-todo .warning-txt {
     margin-top: 2px;
 }
 
-.add-new-todo-container .exit-icon{
+.add-new-todo-container .exit-icon {
     position: absolute;
     top: 5px;
     right: 5px;
     cursor: pointer;
 }
 
-.add-new-todo-container .exit-icon:hover{
+.add-new-todo-container .exit-icon:hover {
     color: var(--red);
 }
 
-.add-new-todo-container .spinner-conatiner{
+.add-new-todo-container .spinner-conatiner {
     z-index: 6;
 }
 
-
-.empty-txt{
+.empty-txt {
     font-size: 26px;
 }
-

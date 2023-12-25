@@ -1,9 +1,9 @@
 package main
 
 import (
-    "fmt"
-	"todo-app/database"
-	"todo-app/server"
+	"fmt"
+	"todo-app/internal/database"
+	"todo-app/internal/server"
 )
 
 func main() {

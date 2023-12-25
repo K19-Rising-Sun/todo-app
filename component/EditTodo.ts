@@ -1,4 +1,4 @@
-export default function HTMLEditToDo(title: string | null,category: string | null,description: string | null):HTMLElement{
+export default function HTMLEditTodo(title: string | null,category: string | null,description: string | null):HTMLElement{
     const HTMLEditTodo = document.createElement('form')
     HTMLEditTodo.className=`todo`
     HTMLEditTodo.innerHTML=`
