@@ -5,8 +5,6 @@ const path = require('path');
 module.exports = {
     entry: {
         Todo: './src/Todo.ts',
-        Login: './src/Login.ts',
-        Register: './src/Register.ts'
     },
     module: {
         rules: [
