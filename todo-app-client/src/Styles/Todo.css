@@ -1,0 +1,262 @@
+body{
+    font-family: 'Roboto', sans-serif;
+}
+
+.main-container{
+    width: 100vw;
+    max-height: 100vh;
+    display: flex;
+}
+
+.todo-wrapper{
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   overflow: hidden;
+   height: 100vh;
+}
+
+.todo-wrapper>h1{
+    text-align: center;
+}
+
+.search-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+}
+
+.search-bars{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.search-bars input{
+    outline: none;
+    border: none;
+}
+
+
+.todo-states{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0px;
+    cursor: pointer;
+}
+
+.todo-states.all>.all-state{
+    color: var(--blue);
+}
+
+.todo-states.done>.done-state{
+    color: var(--blue);
+}
+
+.todo-states.undone>.undone-state{
+    color: var(--blue);
+}
+
+.todo-states p:hover{
+    color: var(--blue);
+}
+
+.todo-section{
+    position: relative;
+    flex: 1;
+    min-height: 250px;
+}
+
+.todo-container{
+    height: 100%;
+    padding: 12px 8px;
+    background: rgb(90, 243, 166);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    overflow-y: scroll;
+    gap: 12px;
+}
+
+.todo,.add-todo{
+    background-color: var(--dark-yellow);
+    position: relative;
+    max-width: 250px;
+    width: 100%;
+    height: 250px;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.todo.complete .todo-title,.todo.complete .description{
+    text-decoration: line-through;
+}
+
+.todo.complete .done-icon{
+    color: var(--green);
+}
+
+.category{
+    color: var(--blue);
+}
+
+.todo-header{
+    display: flex;
+    justify-content: space-between;
+    white-space: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin: 8px 0px;
+    height: 50px;
+}
+
+.todo-title{
+    overflow-x: scroll;
+    overflow: auto;
+    scrollbar-width: thin;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+
+.icons>span{
+    cursor: pointer;
+}
+
+
+.edit-icon:hover{
+    color: var(--blue);
+}
+
+.done-icon:hover{
+    color: var(--green);
+}
+
+.delete-icon:hover{
+    color: var(--red);
+}
+
+.description{
+    overflow-y: scroll;
+    overflow: auto;
+    width: 100%;
+    height: 65%;
+}
+
+.todo input[type="text"]{
+    background-color: var(--dark-yellow);
+    width: 70%;
+    border: none;
+    border-bottom: black 2px solid;
+    outline: none;
+}
+
+.todo textarea, .add-new-todo textarea, .add-new-todo input[type='text']{
+    background-color: var(--light-yellow);
+    border: black 2px solid;
+    outline: none;
+    width: 100%;
+    height: 55%;
+    resize: none;
+}
+
+.add-new-todo textarea, .add-new-todo input[type='text']{
+    border-width: 1px;
+    flex: 1;
+}
+
+.submit-btn{
+    background-color: var(--blue);
+    color: white;
+    padding: 8px 10px;
+    outline: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.add-todo{
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.add-todo:hover span{
+    color: var(--blue);
+}
+
+.add-new-todo-container{
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 4;
+    position: fixed;
+}
+
+.add-new-todo-container.show{
+    display: flex;
+}
+
+.add-new-todo-container.show .black-screen{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 2;
+    background: rgba(17, 17, 17, 0.322);
+}
+
+.add-new-todo{
+    position: relative;
+    background: var(--dark-yellow);
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0px 8px;
+    z-index: 4;
+}
+
+
+.add-new-todo .input-container{
+    width: 100%;
+}
+
+.add-new-todo .warning-txt{
+    margin-top: 2px;
+}
+
+.add-new-todo-container .exit-icon{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+.add-new-todo-container .exit-icon:hover{
+    color: var(--red);
+}
+
+.add-new-todo-container .spinner-conatiner{
+    z-index: 6;
+}
+
+
+.empty-txt{
+    font-size: 26px;
+}
+
