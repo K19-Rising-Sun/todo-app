@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS todo (
     category TEXT NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    state TEXT NOT NULL
+    is_done INTEGER NOT NULL
 );
 CREATE VIRTUAL TABLE IF NOT EXISTS todo_search using fts5 (category, title);
 
@@ -44,12 +44,12 @@ type User struct {
 }
 
 type Todo struct {
-	Id          int    `db:"id"`
-	Username    string `db:"username"`
-	Category    string `db:"category"`
-	Title       string `db:"title"`
-	Description string `db:"description"`
-	State       string `db:"state"`
+	Id          int    `db:"id" json:"id"`
+	Username    string `db:"username" json:"-"`
+	Category    string `db:"category" json:"category"`
+	Title       string `db:"title" json:"title"`
+	Description string `db:"description" json:"description"`
+	IsDone       bool   `db:"is_done" json:"is_done"`
 }
 
 func Init() (*sqlx.DB, error) {
