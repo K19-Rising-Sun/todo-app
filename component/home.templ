@@ -11,7 +11,13 @@ templ TodoList(todos [ ]database.Todo) {
 					<p>Category: { todo.Category }</p>
 					<p>Title: { todo.Title }</p>
 					<p>Description: { todo.Description }</p>
-					<p>State: { todo.State }</p>
+					if todo.IsDone {
+						<p>
+							State: Done
+						</p>
+					} else {
+						<p>State: Undone</p>
+					}
 					<div id="todo-delete-error"></div>
 					<button type="button" hx-delete={ fmt.Sprintf("/todo/%d", todo.Id) } hx-target-error="#todo-delete-error" hx-target="closest li" hx-swap="outerHTML">Delete</button>
 				</div>
@@ -21,7 +27,7 @@ templ TodoList(todos [ ]database.Todo) {
 }
 
 templ todoAddForm() {
-	<form action="/todo" method="post" hx-post="/todo" hx-swap="outerHTML" hx-target="#todo-list" hx-target-error="#todo-add-error">
+	<form action="/todo" method="post">
 		<label for="category">Category:</label>
 		<input type="text" name="category"/>
 		<br/>
