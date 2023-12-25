@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"todo-app/component"
 	"todo-app/internal/database"
+	"todo-app/view"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -53,14 +54,14 @@ func (s *Server) HomePage(c *gin.Context) {
 	session := sessions.Default(c)
 	user := session.Get("username")
 	if user == nil {
-		c.HTML(http.StatusOK, "", component.Login())
+		c.HTML(http.StatusOK, "", view.Login())
 		return
 	}
 
-	c.HTML(http.StatusOK, "", component.Home())
+	c.HTML(http.StatusOK, "", view.Home())
 }
 func (s *Server) RegisterPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "register", component.Register())
+	c.HTML(http.StatusOK, "register", view.Register())
 }
 
 func (s *Server) LogoutHandler(c *gin.Context) {
@@ -93,6 +94,7 @@ func (s *Server) LoginHandler(c *gin.Context) {
 		return
 	}
 	if !is_user_valid {
+        fmt.Println("Invalid user")
 		c.HTML(http.StatusUnauthorized, "", component.Error("Invalid username or password"))
 		return
 	}

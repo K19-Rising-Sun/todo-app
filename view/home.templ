@@ -1,0 +1,81 @@
+package view
+
+templ Home() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Todo app</title>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+			<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+			<link rel="stylesheet" href="/static/css/reset.css"/>
+			<link rel="stylesheet" href="/static/css/todo.css"/>
+			<script src="/static/js/Todo.js" defer></script>
+			<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+			<script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
+			<script>var exports = {};</script>
+		</head>
+		<body>
+			<div class="main-container">
+				<div class="add-new-todo-container">
+					<div class="black-screen"></div>
+					<div class="spinner-conatiner">
+						<div class="spinner"></div>
+					</div>
+					<form class="add-new-todo">
+						<span class="material-symbols-outlined exit-icon">
+							close
+						</span>
+						<h1>Add new todo</h1>
+						<div class="input-container">
+							<label for="new-category">Category</label>
+							<input type="text" required name="category" id="new-category"/>
+						</div>
+						<div class="input-container">
+							<label for="new-title">Title</label>
+							<input type="text" required name="title" id="new-title"/>
+						</div>
+						<div class="input-container">
+							<label for="new-description">Description</label>
+							<textarea name="description" required id="new-description" cols="30" rows="10"></textarea>
+						</div>
+						<input type="submit" class="submit-btn" value="Add"/>
+					</form>
+				</div>
+				<div class="todo-wrapper">
+					<h1>Name 's todo</h1>
+					<form class="search-section">
+						<span>Search by:</span>
+						<div class="search-bars">
+							<input type="text" id="search-title" placeholder="Title"/>
+							<input type="text" id="search-category" placeholder="Category"/>
+						</div>
+						<input type="submit" value="Search" class="submit-btn"/>
+					</form>
+					<div class="todo-section">
+						<div class="todo-container">
+							<button class="add-todo">
+								<span class="material-symbols-outlined">
+									add
+								</span>
+							</button>
+						</div>
+						<div class="spinner-conatiner">
+							<div class="spinner"></div>
+						</div>
+					</div>
+					<div class="todo-states all">
+						<p class="all-state">All</p>
+						<p class="done-state">Done</p>
+						<p class="undone-state">Undone</p>
+					</div>
+				</div>
+			</div>
+		</body>
+	</html>
+}
