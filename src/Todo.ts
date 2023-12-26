@@ -70,11 +70,12 @@ function renderToDo() {
 let EditApi = async (toDoId: string):Promise<void>=>{
     const formData = new FormData()
     const {category,title,description}=toDoList[toDoId]
+    formData.append('id',toDoId)
     formData.append('category',category)
     formData.append('title',title)
     formData.append('description',description)
     const response = await fetch('/edittodo',{
-        method: 'POST'
+        method: 'PUT'
     })
     if(response.status<400){
         const {title,category,description} = await response.json()
@@ -110,12 +111,21 @@ let deleteToDoFunc = async(toDoId: string): Promise<void> => {
     throw new Error('Can\'t delete todo')
 }
 
-let checkToDoFunc = (toDoId: string) => new Promise<boolean>((resolve) =>
-    setTimeout(() => {
-        toDoList[toDoId].is_done = !toDoList[toDoId].is_done
-        resolve(true)
-    }, 1000)
-)
+let checkToDoFunc = async (toDoId: string):Promise<void>=>{
+    const formData = new FormData()
+    formData.append('id',toDoId)
+    formData.append('is_done',JSON.stringify(!(toDoList[toDoId].is_done)))
+    const response = await fetch('/edittodo',{
+        method: 'PUT'
+    })
+    if(response.status<400){
+        const {is_done} = await response.json()
+        toDoList[toDoId].is_done=is_done
+        return
+    }
+
+    throw new Error("Failed to check todo")
+}
 
 let addToDoFunc = async (newToDo: IToDo): Promise<void> =>{
     const formData = new FormData()
