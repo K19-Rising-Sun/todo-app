@@ -7,8 +7,7 @@ interface IToDoList {
         title: string,
         category: string,
         description: string,
-        isCompleted: boolean,
-        isEditing: boolean
+        is_done: boolean,
     }
 }
 
@@ -18,31 +17,18 @@ let toDoList: IToDoList = {}
 
 let stateFilter = 'All'
 
-function makeid(length: number): string {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        counter += 1;
-    }
-    return result;
-}
-
-
 interface IToDo {
     title: string,
     category: string,
     description: string
 }
 
-function checkState(state: string, isCompleted: boolean): boolean {
+function checkState(state: string, is_done: boolean): boolean {
     switch (state) {
         case 'Done':
-            return isCompleted
+            return is_done
         case 'Undone':
-            return !isCompleted
+            return !is_done
         default:
             return true
     }
@@ -71,83 +57,100 @@ function renderToDo() {
         return
     }
     for (const ToDoId in toDoList) {
-        const { title, description, category, isCompleted, isEditing } = toDoList[ToDoId]
-        if (checkState(stateFilter, isCompleted)) {
-            const HTMLToDo = (isEditing) ?
-                AddHTMLEditToDoEvents(HTMLEditToDo(title, category, description), ToDoId) as HTMLElement :
-                AddHTMLToDoEvents(HTMLTodo(title, category, description, isCompleted), ToDoId) as HTMLElement
+        const { title, description, category, is_done } = toDoList[ToDoId]
+        if (checkState(stateFilter, is_done)) {
+            const HTMLToDo = AddHTMLToDoEvents(HTMLTodo(title, category, description, is_done), ToDoId) as HTMLElement
             todo_container.appendChild(HTMLToDo)
         }
     }
 }
 
 
-//Fake api for testing
-let EditApi = (toDoId: string) => new Promise<boolean>((resolve, reject) =>
-    setTimeout(() => {
-        toDoList[toDoId] = { ...toDoList[toDoId], isEditing: false }
-        resolve(true)
-    }, 10)
-)
+//Function to call the api
+let EditApi = async (toDoId: string):Promise<void>=>{
+    const formData = new FormData()
+    const {category,title,description}=toDoList[toDoId]
+    formData.append('category',category)
+    formData.append('title',title)
+    formData.append('description',description)
+    const response = await fetch('/edittodo',{
+        method: 'POST'
+    })
+    if(response.status<400){
+        const {title,category,description} = await response.json()
+        toDoList[toDoId]={...toDoList[toDoId],title,category,description}
+        return
+    }
 
-let loadToDoFunc = (username: string) => new Promise<boolean>((resolve) =>
-    setTimeout(() => {
-        toDoList = {
-            '23': {
-                title: 'asdlkfjasd',
-                category: 'alsdjflasjd',
-                description: 'alsdjflasjd',
-                isCompleted: true,
-                isEditing: false
-            },
-            '235': {
-                title: 'asdlkfjasd',
-                category: 'alsdjflasjd',
-                description: 'alsdjflasjd fasdf asd fa sdf',
-                isCompleted: false,
-                isEditing: false
-            },
-            '21': {
-                title: 'asdlkfjasadsf asdf asdf asd fa sdfadsfd',
-                category: 'alsdjflasasdjd',
-                description: 'alsdjflasjdsafd asdf asdf asdf asdf',
-                isCompleted: false,
-                isEditing: false
-            },
+    throw new Error("Failed to edit todo")
+}
+
+let loadToDoFunc = async ():Promise<void> => {
+    const response = await fetch('/todo')
+    if(response.status<400){
+        const newToDoList = await response.json()
+        for( const {id,category,title,description,is_done} of newToDoList){
+            toDoList[id]={category,title,description,is_done}
         }
         renderToDo()
-        resolve(true)
-    }, 1000)
-)
+        return
+    }
 
-let deleteToDoFunc = (toDoId: string) => new Promise<boolean>((resolve, reject) =>
-    setTimeout(() => {
+    throw new Error("Failed to load todo")
+}
+
+let deleteToDoFunc = async(toDoId: string): Promise<void> => {
+    const response = await fetch('/todo/'+toDoId,{
+        method:'DELETE'
+    })
+    if(response.status<400){
         delete toDoList[toDoId]
-        resolve(true)
-    }, 1000)
-)
+        return
+    }
+    throw new Error('Can\'t delete todo')
+}
 
 let checkToDoFunc = (toDoId: string) => new Promise<boolean>((resolve) =>
     setTimeout(() => {
-        toDoList[toDoId].isCompleted = !toDoList[toDoId].isCompleted
+        toDoList[toDoId].is_done = !toDoList[toDoId].is_done
         resolve(true)
     }, 1000)
 )
 
-let addToDoFunc = (newToDo: IToDo) => new Promise<boolean>((resolve) =>
-    setTimeout(() => {
-        toDoList[makeid(8)] = { ...newToDo, isCompleted: false, isEditing: false }
+let addToDoFunc = async (newToDo: IToDo): Promise<void> =>{
+    const formData = new FormData()
+    const {category,title,description}=newToDo
+    formData.append('category',category)
+    formData.append('title',title)
+    formData.append('description',description)
+    const response = await fetch('/todo',{
+        method: 'POST',
+        body: formData
+    })
+    if(response.status<400){
+        const {id,title,category,description,is_done} = await response.json()
+        toDoList[id]={title,category,description,is_done}
         renderToDo()
-        resolve(true)
-    }, 1000)
-)
+        return
+    }
 
-let searchToDoFunc = (title: string, category: string) => new Promise<boolean>((resolve) =>
-    setTimeout(() => {
+    throw new Error('Failed to add todo')
+} 
+
+let searchToDoFunc = async (title: string, category: string): Promise<void>=>{
+    const response = await fetch(`/searchtodo?title=${title}&category=${category}`)
+    if(response.status<400){
+        const newToDoList = await response.json()
+        toDoList={}
+        for( const {id,category,title,description,is_done} of newToDoList){
+            toDoList[id]={category,title,description,is_done}
+        }
         renderToDo()
-        resolve(true)
-    }, 1000)
-)
+        return
+    }
+
+    throw new Error("Failed to search todo")
+}
 
 //Inject events into the HTML Elements
 
@@ -187,7 +190,7 @@ function addCheckToDoEvent(HTMLToDo: HTMLElement, ToDoId: string): HTMLElement {
             spinner_container.classList.toggle('show')
             await checkToDoFunc(ToDoId)
             HTMLToDo.classList.toggle('complete')
-            if (!checkState(stateFilter, toDoList[ToDoId].isCompleted)) HTMLToDo.remove()
+            if (!checkState(stateFilter, toDoList[ToDoId].is_done)) HTMLToDo.remove()
         }
         catch (err) {
             console.log(err)
@@ -236,8 +239,8 @@ function addEditToDoEvent(EditHTMLToDo: HTMLElement, ToDoId: string): HTMLElemen
         try {
             spinner_container.classList.toggle('show')
             await EditApi(ToDoId)
-            const { title, category, description, isCompleted } = toDoList[ToDoId]
-            EditHTMLToDo.replaceWith(AddHTMLToDoEvents(HTMLTodo(title, category, description, isCompleted), ToDoId) as HTMLElement)
+            const { title, category, description, is_done } = toDoList[ToDoId]
+            EditHTMLToDo.replaceWith(AddHTMLToDoEvents(HTMLTodo(title, category, description, is_done), ToDoId) as HTMLElement)
         }
         catch (err) {
             console.log(err)
@@ -346,7 +349,7 @@ function addSearchByTitleAndCategoryEvent() {
 async function initialLoad() {
     try {
         (document.querySelector('.todo-section>.spinner-conatiner') as HTMLElement).classList.toggle('show')
-        await loadToDoFunc('f')
+        await loadToDoFunc()
     }
     catch (err) {
         console.log(err)
