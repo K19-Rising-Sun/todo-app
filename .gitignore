@@ -1,3 +1,6 @@
 **/*_templ.go
 **/*.db
 **/tmp
+**/node_modules
+.env
+**/static/js

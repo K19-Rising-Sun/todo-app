@@ -1,0 +1,44 @@
+package view
+
+templ Register() {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<title>Todo app</title>
+			<link rel="stylesheet" href="/static/css/reset.css"/>
+			<link rel="stylesheet" href="/static/css/login_register.css"/>
+			<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+			<script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
+		</head>
+		<body hx-ext="response-targets">
+			<div class="container-wrapper">
+				<div class="container">
+					<h1>TODO APP</h1>
+					<form
+                        class="form-container"
+                        hx-post="/auth/register"
+                        hx-target-error=".warning-txt"
+                        hx-indicator=".spinner"
+                    >
+						<h2>Register</h2>
+						<div class="input-container">
+							<label for="username">Username</label>
+							<input type="text" required name="username" id="username" class="text-input"/>
+						</div>
+						<div class="input-container">
+							<label for="password">Password</label>
+							<input type="password" required name="password" id="password" class="text-input"/>
+						</div>
+						<p class="warning-txt"></p>
+						<input type="submit" class="submit-btn" value="Register"/>
+					</form>
+					<div class="spinner-conatiner">
+						<div class="spinner"></div>
+					</div>
+				</div>
+			</div>
+		</body>
+	</html>
+}

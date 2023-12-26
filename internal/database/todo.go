@@ -6,6 +6,30 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+func (todo *Todo) Merge(source Todo) {
+	if todo.Id != source.Id {
+		return
+	}
+	if source.Category != "" {
+		todo.Category = source.Category
+	}
+	if source.Title != "" {
+		todo.Title = source.Title
+	}
+	if source.Description != "" {
+		todo.Description = source.Description
+	}
+	todo.IsDone = source.IsDone
+}
+
+func GetTodo(db *sqlx.DB, id int) (Todo, error) {
+	todo := Todo{}
+	if err := db.Get(&todo, "SELECT * FROM todo WHERE id = ?", id); err != nil {
+		return Todo{}, err
+	}
+	return todo, nil
+}
+
 func (todo *Todo) Create(db *sqlx.DB) (Todo, error) {
 	result, err := db.NamedExec("INSERT INTO todo (username, category, title, description, is_done) VALUES (:username, :category, :title, :description, :is_done)", todo)
 	if err != nil {
@@ -26,21 +50,18 @@ func (todo *Todo) Create(db *sqlx.DB) (Todo, error) {
 }
 
 func (todo *Todo) Update(db *sqlx.DB) (Todo, error) {
-	result, err := db.NamedExec(
-		"UPDATE todo SET username = :username, category = :category, title = :title, description = :description, is_done = :is_done WHERE id = :id",
-		todo,
+	updated_todo, err := GetTodo(db, todo.Id)
+	if err != nil {
+		return Todo{}, err
+	}
+	updated_todo.Merge(*todo)
+
+	fmt.Printf("%#v \n", updated_todo)
+	_, err = db.NamedExec(
+		"UPDATE todo SET username = :username, category = :category, title = :title, description = :description, is_done = :is_done, id = :id WHERE id = :id",
+		updated_todo,
 	)
 	if err != nil {
-		return Todo{}, err
-	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		return Todo{}, err
-	}
-
-	updated_todo := Todo{}
-	if err := db.Get(&updated_todo, "SELECT * FROM todo WHERE id = ?", id); err != nil {
 		return Todo{}, err
 	}
 

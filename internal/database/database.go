@@ -20,19 +20,23 @@ CREATE TABLE IF NOT EXISTS todo (
 );
 CREATE VIRTUAL TABLE IF NOT EXISTS todo_search using fts5 (category, title);
 
-CREATE TRIGGER IF NOT EXISTS insert_todo_trigger
+DROP TRIGGER IF EXISTS sync_todo_insert;
+DROP TRIGGER IF EXISTS sync_todo_update;
+DROP TRIGGER IF EXISTS sync_todo_delete;
+
+CREATE TRIGGER IF NOT EXISTS sync_todo_insert
 AFTER INSERT ON todo 
 BEGIN 
 INSERT OR IGNORE INTO todo_search (category, title) VALUES (NEW.category, NEW.title);
 END;
 
-CREATE TRIGGER IF NOT EXISTS update_todo_trigger
+CREATE TRIGGER IF NOT EXISTS sync_todo_update
 AFTER UPDATE ON todo 
 BEGIN 
-UPDATE todo_search SET category = NEW.TITLE, title = NEW.TITLE WHERE id = NEW.id;
+UPDATE todo_search SET category = NEW.category, title = NEW.title WHERE rowid = OLD.rowid;
 END;
 
-CREATE TRIGGER IF NOT EXISTS delete_todo_trigger
+CREATE TRIGGER IF NOT EXISTS sync_todo_delete
 AFTER DELETE ON todo 
 BEGIN 
 DELETE FROM todo_search where rowid = OLD.rowid;
@@ -44,12 +48,12 @@ type User struct {
 }
 
 type Todo struct {
-	Id          int    `db:"id" json:"id"`
+	Id          int    `db:"id" json:"id,string"`
 	Username    string `db:"username" json:"-"`
 	Category    string `db:"category" json:"category"`
 	Title       string `db:"title" json:"title"`
 	Description string `db:"description" json:"description"`
-	IsDone       bool   `db:"is_done" json:"is_done"`
+	IsDone      bool   `db:"is_done" json:"is_done"`
 }
 
 func Init() (*sqlx.DB, error) {
