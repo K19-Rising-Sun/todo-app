@@ -34,6 +34,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	{
 		todo_routes.GET("/", s.TodoQueryHandler)
 		todo_routes.POST("/", s.TodoAddHandler)
+		todo_routes.PUT("/", s.TodoPutHandler)
 		todo_routes.DELETE("/:id", s.TodoDeleteHandler)
 	}
 
@@ -58,7 +59,7 @@ func (s *Server) HomePage(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "", view.Home())
+	c.HTML(http.StatusOK, "", view.Home(user.(string)))
 }
 func (s *Server) RegisterPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "register", view.Register())
@@ -177,6 +178,40 @@ func (s *Server) TodoAddHandler(c *gin.Context) {
 
 	// c.HTML(http.StatusOK, "", component.TodoList(todos))
 	c.JSON(http.StatusOK, created_todo)
+}
+
+func (s *Server) TodoPutHandler(c *gin.Context) {
+	session := sessions.Default(c)
+	username := session.Get("username").(string)
+
+	is_done, err := strconv.ParseBool(c.PostForm("is_done"))
+    id, err := strconv.Atoi(c.PostForm("id"))
+	todo := database.Todo{
+        Id:          id,
+		Username:    username,
+		Category:    c.PostForm("category"),
+		Title:       c.PostForm("title"),
+		Description: c.PostForm("description"),
+		IsDone:      is_done,
+	}
+    fmt.Println(todo)
+
+	updated_todo, err := todo.Update(s.db)
+	if err != nil {
+		fmt.Println(err)
+		// c.HTML(http.StatusInternalServerError, "", component.Error("Failed to add new todo"))
+		return
+	}
+
+	// todos, err := database.QueryTodo(s.db, username, "", "")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	c.HTML(http.StatusUnauthorized, "", component.Error("Failed to get new todo list"))
+	// 	return
+	// }
+
+	// c.HTML(http.StatusOK, "", component.TodoList(todos))
+	c.JSON(http.StatusOK, updated_todo)
 }
 func (s *Server) TodoDeleteHandler(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))

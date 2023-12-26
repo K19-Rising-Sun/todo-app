@@ -1,6 +1,6 @@
 package view
 
-templ Home() {
+templ Home(userName string) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
@@ -44,11 +44,12 @@ templ Home() {
 							<label for="new-description">Description</label>
 							<textarea name="description" required id="new-description" cols="30" rows="10"></textarea>
 						</div>
+						<p class="warning-txt">Please fill in all the field</p>
 						<input type="submit" class="submit-btn" value="Add"/>
 					</form>
 				</div>
 				<div class="todo-wrapper">
-					<h1>Name 's todo</h1>
+					<h1>{ userName } 's todo</h1>
 					<form class="search-section">
 						<span>Search by:</span>
 						<div class="search-bars">

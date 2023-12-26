@@ -74,8 +74,9 @@ let EditApi = async (toDoId: string):Promise<void>=>{
     formData.append('category',category)
     formData.append('title',title)
     formData.append('description',description)
-    const response = await fetch('/edittodo',{
-        method: 'PUT'
+    const response = await fetch('/todo',{
+        method: 'PUT',
+        body: formData
     })
     if(response.status<400){
         const {title,category,description} = await response.json()
@@ -115,8 +116,9 @@ let checkToDoFunc = async (toDoId: string):Promise<void>=>{
     const formData = new FormData()
     formData.append('id',toDoId)
     formData.append('is_done',JSON.stringify(!(toDoList[toDoId].is_done)))
-    const response = await fetch('/edittodo',{
-        method: 'PUT'
+    const response = await fetch('/todo',{
+        method: 'PUT',
+        body: formData
     })
     if(response.status<400){
         const {is_done} = await response.json()
@@ -148,7 +150,7 @@ let addToDoFunc = async (newToDo: IToDo): Promise<void> =>{
 } 
 
 let searchToDoFunc = async (title: string, category: string): Promise<void>=>{
-    const response = await fetch(`/searchtodo?title=${title}&category=${category}`)
+    const response = await fetch(`/todo?title=${title}&category=${category}`)
     if(response.status<400){
         const newToDoList = await response.json()
         toDoList={}
