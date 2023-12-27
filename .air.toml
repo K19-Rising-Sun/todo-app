@@ -2,8 +2,8 @@ root = "."
 tmp_dir = "tmp"
 
 [build]
-  bin = "./tmp/main"
-  cmd = "sqlc generate && templ generate && go build --tags 'fts5' -o ./tmp/main ."
+  bin = "./tmp/main.exe"
+  cmd = "sqlc generate && templ generate && go build --tags 'fts5' -o ./tmp/main.exe ."
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "static"]
   exclude_file = []
