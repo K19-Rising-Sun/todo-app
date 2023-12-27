@@ -3,11 +3,11 @@ tmp_dir = "tmp"
 
 [build]
   bin = "./tmp/main"
-  cmd = "templ generate && go build --tags 'fts5' -o ./tmp/main ."
+  cmd = "sqlc generate && templ generate && go build --tags 'fts5' -o ./tmp/main ."
   delay = 1000
-  exclude_dir = ["assets", "tmp", "vendor"]
+  exclude_dir = ["assets", "tmp", "vendor", "static"]
   exclude_file = []
-  exclude_regex = [".*_templ.go"]
+  exclude_regex = [".*_templ.go", ".*/database/.*.go"]
   exclude_unchanged = false
   follow_symlink = false
   full_bin = ""
