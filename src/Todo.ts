@@ -160,10 +160,6 @@ let searchToDoFunc = async (title: string, category: string): Promise<void>=>{
     throw new Error("Failed to search todo")
 }
 
-let logOutFunc=async():Promise<void>=>{
-    const response = await fetch('/logout')
-}
-
 //Inject events into the HTML Elements
 
 //Switch todo element to an edit todo form
@@ -381,24 +377,6 @@ function addExitEvents() {
     })
 }
 
-//Add the logout event
-function addLogoutEvent(logoutElement:HTMLElement):HTMLElement{
-    const screen_spinner=document.querySelector('#screen-spinner') as HTMLElement
-    logoutElement.addEventListener('click',async()=>{
-        try{
-            screen_spinner.classList.toggle('show')
-            await logOutFunc()
-        }
-        catch(err){
-            console.log(err)
-        }
-        finally{
-            screen_spinner.classList.toggle('show')
-        }
-    })
-    return logoutElement
-}
-addLogoutEvent(document.querySelector('#logout-btn'))
 addNewTodoFormContainerEvents(document.querySelector('.add-new-todo-container') as HTMLElement)
 addExitEvents()
 addChangeStateEvent()
