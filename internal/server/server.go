@@ -1,20 +1,20 @@
 package server
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"time"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 type Server struct {
 	port int
-    db *sqlx.DB
+    db *sql.DB
 }
 
-func NewServer(port int, db *sqlx.DB) *http.Server {
+func NewServer(port int, db *sql.DB) *http.Server {
 	NewServer := &Server{
 		port: port,
         db: db,

@@ -1,19 +1,34 @@
 package main
 
 import (
+	"context"
+	"database/sql"
+	_ "embed"
 	"fmt"
-	"todo-app/internal/database"
+	_ "github.com/mattn/go-sqlite3"
 	"todo-app/internal/server"
 )
 
+//go:embed internal/database/schema.sql
+var schema string
+
 func main() {
-	db, err := database.Init()
+	ctx := context.Background()
+
+	db, err := sql.Open("sqlite3", "todo.db")
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
-    server := server.NewServer(3000, db)
-    err = server.ListenAndServe()
-    if err != nil {
-        panic(fmt.Sprintf("cannot start server: %s", err))
-    }
+
+	if _, err := db.ExecContext(ctx, schema); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	server := server.NewServer(3000, db)
+	err = server.ListenAndServe()
+	if err != nil {
+		panic(fmt.Sprintf("cannot start server: %s", err))
+	}
 }

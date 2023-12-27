@@ -1,6 +1,9 @@
 package server
 
 import (
+	"context"
+	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -83,20 +86,17 @@ func (s *Server) LogoutHandler(c *gin.Context) {
 	c.Redirect(http.StatusSeeOther, "/")
 }
 func (s *Server) LoginHandler(c *gin.Context) {
-	user := database.User{
-		Username: c.PostForm("username"),
-		Password: c.PostForm("password"),
-	}
+	ctx := context.Background()
 
-	is_user_valid, err := user.IsValid(s.db)
+	user, err := database.New(s.db).GetUser(ctx, c.PostForm("username"))
 	if err != nil {
 		fmt.Println(err)
-		c.HTML(http.StatusUnauthorized, "", component.Error("Invalid username or password"))
+		c.HTML(http.StatusUnauthorized, "", component.Error("Invalid username"))
 		return
 	}
-	if !is_user_valid {
-        fmt.Println("Invalid user")
-		c.HTML(http.StatusUnauthorized, "", component.Error("Invalid username or password"))
+
+	if user.Password != c.PostForm("password") {
+		c.HTML(http.StatusUnauthorized, "", component.Error("Invalid password"))
 		return
 	}
 
@@ -110,12 +110,12 @@ func (s *Server) LoginHandler(c *gin.Context) {
 	c.Header("HX-Redirect", "/")
 }
 func (s *Server) RegisterHandler(c *gin.Context) {
-	user := database.User{
+	ctx := context.Background()
+
+	user, err := database.New(s.db).CreateUser(ctx, database.CreateUserParams{
 		Username: c.PostForm("username"),
 		Password: c.PostForm("password"),
-	}
-
-	err := user.Add(s.db)
+	})
 	if err != nil {
 		fmt.Println(err)
 		c.HTML(http.StatusConflict, "", component.Error("Username already exist"))
@@ -133,12 +133,46 @@ func (s *Server) RegisterHandler(c *gin.Context) {
 }
 
 func (s *Server) TodoQueryHandler(c *gin.Context) {
+	ctx := context.Background()
+
 	session := sessions.Default(c)
 	username := session.Get("username").(string)
 
 	url_parameter := c.Request.URL.Query()
+	category := url_parameter.Get("category")
+	title := url_parameter.Get("title")
 
-	todos, err := database.QueryTodo(s.db, username, url_parameter.Get("category"), url_parameter.Get("title"))
+	var todos []database.Todo
+	var err error
+
+	if category != "" && title != "" {
+		todos, err = database.New(s.db).SearchTodos(ctx, database.SearchTodosParams{
+			Username: username,
+			Query: sql.NullString{
+				String: fmt.Sprintf("category: %s and title: %s", category, title),
+				Valid:  true,
+			},
+		})
+	} else if category != "" {
+		todos, err = database.New(s.db).SearchTodos(ctx, database.SearchTodosParams{
+			Username: username,
+			Query: sql.NullString{
+				String: fmt.Sprintf("category: %s", category),
+				Valid:  true,
+			},
+		})
+	} else if title != "" {
+		todos, err = database.New(s.db).SearchTodos(ctx, database.SearchTodosParams{
+			Username: username,
+			Query: sql.NullString{
+				String: fmt.Sprintf("title: %s", title),
+				Valid:  true,
+			},
+		})
+	} else {
+		todos, err = database.New(s.db).GetTodos(ctx, username)
+	}
+
 	if err != nil {
 		fmt.Println(err)
 		// c.HTML(http.StatusUnauthorized, "", component.Error("Failed to get todo list"))
@@ -150,70 +184,105 @@ func (s *Server) TodoQueryHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, todos)
 }
 func (s *Server) TodoAddHandler(c *gin.Context) {
+	ctx := context.Background()
+
 	session := sessions.Default(c)
 	username := session.Get("username").(string)
 
-	is_done, err := strconv.ParseBool(c.PostForm("is_done"))
-	todo := database.Todo{
+	is_done, err := strconv.Atoi(c.PostForm("is_done"))
+
+	created_todo, err := database.New(s.db).CreateTodo(ctx, database.CreateTodoParams{
 		Username:    username,
 		Category:    c.PostForm("category"),
 		Title:       c.PostForm("title"),
 		Description: c.PostForm("description"),
-		IsDone:      is_done,
-	}
-
-	created_todo, err := todo.Create(s.db)
+		IsDone:      int64(is_done),
+	})
 	if err != nil {
 		fmt.Println(err)
 		// c.HTML(http.StatusInternalServerError, "", component.Error("Failed to add new todo"))
 		return
 	}
-
-	// todos, err := database.QueryTodo(s.db, username, "", "")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	c.HTML(http.StatusUnauthorized, "", component.Error("Failed to get new todo list"))
-	// 	return
-	// }
 
 	// c.HTML(http.StatusOK, "", component.TodoList(todos))
 	c.JSON(http.StatusOK, created_todo)
 }
 
 func (s *Server) TodoPutHandler(c *gin.Context) {
+	ctx := context.Background()
+
 	session := sessions.Default(c)
 	username := session.Get("username").(string)
 
-	is_done, err := strconv.ParseBool(c.PostForm("is_done"))
-    id, err := strconv.Atoi(c.PostForm("id"))
-	todo := database.Todo{
-        Id:          id,
-		Username:    username,
-		Category:    c.PostForm("category"),
-		Title:       c.PostForm("title"),
-		Description: c.PostForm("description"),
-		IsDone:      is_done,
-	}
-    fmt.Println(todo)
-
-	updated_todo, err := todo.Update(s.db)
+	id, err := strconv.Atoi(c.PostForm("id"))
 	if err != nil {
-		fmt.Println(err)
-		// c.HTML(http.StatusInternalServerError, "", component.Error("Failed to add new todo"))
+		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	// todos, err := database.QueryTodo(s.db, username, "", "")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	c.HTML(http.StatusUnauthorized, "", component.Error("Failed to get new todo list"))
-	// 	return
-	// }
+	category := sql.NullString{}
+	if c.PostForm("category") != "" {
+		category = sql.NullString{
+			String: c.PostForm("category"),
+			Valid:  true,
+		}
+	}
+	title := sql.NullString{}
+	if c.PostForm("title") != "" {
+		title = sql.NullString{
+			String: c.PostForm("title"),
+			Valid:  true,
+		}
+	}
+	description := sql.NullString{}
+	if c.PostForm("description") != "" {
+		description = sql.NullString{
+			String: c.PostForm("description"),
+			Valid:  true,
+		}
+	}
+	is_done_raw, err := strconv.ParseBool(c.PostForm("is_done"))
+	is_done := sql.NullInt64{}
+	if err != nil {
+		fmt.Println(err)
+		c.Status(http.StatusBadRequest)
+		return
+	}
+	if is_done_raw == true {
+		is_done = sql.NullInt64{
+			Int64: int64(1),
+			Valid: true,
+		}
+	} else {
+		is_done = sql.NullInt64{
+			Int64: int64(0),
+			Valid: true,
+		}
+	}
+
+	updated_todo, err := database.New(s.db).UpdateTodo(ctx, database.UpdateTodoParams{
+		ID:          int64(id),
+		Username:    sql.NullString{String: username, Valid: true},
+		Category:    category,
+		Title:       title,
+		Description: description,
+		IsDone:      is_done,
+	})
+	test, err := json.Marshal(updated_todo)
+	fmt.Println(test)
+	if err != nil {
+		fmt.Println(err)
+		c.Status(http.StatusInternalServerError)
+		// c.HTML(http.StatusInternalServerError, "", component.Error("Failed to add new todo"))
+		return
+	}
 
 	// c.HTML(http.StatusOK, "", component.TodoList(todos))
 	c.JSON(http.StatusOK, updated_todo)
 }
 func (s *Server) TodoDeleteHandler(c *gin.Context) {
+	ctx := context.Background()
+
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		fmt.Println(err)
@@ -225,7 +294,10 @@ func (s *Server) TodoDeleteHandler(c *gin.Context) {
 	session := sessions.Default(c)
 	username := session.Get("username").(string)
 
-	if err := database.DeleteTodo(s.db, id, username); err != nil {
+	if err := database.New(s.db).DeleteTodo(ctx, database.DeleteTodoParams{
+		ID:       int64(id),
+		Username: username,
+	}); err != nil {
 		fmt.Println(err)
 		// c.HTML(http.StatusUnauthorized, "", component.Error("User does not own this todo"))
 		c.Status(http.StatusUnauthorized)
