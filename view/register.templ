@@ -14,26 +14,32 @@ templ Register() {
 		</head>
 		<body hx-ext="response-targets">
 			<div class="container-wrapper">
+				<h1 id="app-name">Todo App</h1>
 				<div class="container">
-					<h1>TODO APP</h1>
 					<form
-                        class="form-container"
-                        hx-post="/auth/register"
-                        hx-target-error=".warning-txt"
-                        hx-indicator=".spinner"
-                    >
-						<h2>Register</h2>
-						<div class="input-container">
-							<label for="username">Username</label>
-							<input type="text" required name="username" id="username" class="text-input"/>
-						</div>
-						<div class="input-container">
-							<label for="password">Password</label>
-							<input type="password" required name="password" id="password" class="text-input"/>
-						</div>
+ 						class="form-container"
+ 						hx-post="/auth/login"
+ 						hx-indicator=".spinner"
+ 						hx-target-error=".warning-txt"
+					>
+						<input
+ 							type="text"
+ 							required
+ 							name="username"
+ 							id="username"
+ 							class="text-input"
+ 							placeholder="Username"
+						/>
+						<input
+ 							type="password"
+ 							required
+ 							name="password"
+ 							id="password"
+ 							class="text-input"
+ 							placeholder="Password"
+						/>
 						<p class="warning-txt"></p>
 						<input type="submit" class="submit-btn" value="Register"/>
-						<a href="/">Login</a>
 					</form>
 					<div class="spinner-conatiner">
 						<div class="spinner"></div>
