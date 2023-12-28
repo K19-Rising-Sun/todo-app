@@ -1,5 +1,5 @@
 body {
-    font-family: "Roboto", sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 input {
@@ -7,17 +7,20 @@ input {
 }
 
 .container-wrapper {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: 400px;
+    width: 90vw;
+    transform: translate(-50%, -50%);
     justify-content: center;
+    text-align: center;
     align-items: center;
 }
 
 .container {
-    background-color: var(--dark-yellow);
+    background-color: white;
     position: relative;
-    max-width: 300px;
     width: 100%;
     min-height: 250px;
     padding: 20px 14px;
@@ -25,13 +28,10 @@ input {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: auto;
-    border-radius: 5%;
-}
-
-.celebration-txt {
-    text-align: center;
-    margin-bottom: 8px;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+        rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+        rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 }
 
 .form-container {
@@ -39,44 +39,57 @@ input {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    width: 100%;
     margin-top: 12px;
 }
 
 .form-container input[type="text"],
 .form-container input[type="password"] {
-    background: var(--light-yellow);
-    outline: none;
-    border: solid 1px black;
-}
-
-.form-container h2 {
-    text-align: center;
-}
-
-.input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-}
-
-.input-container label {
-    cursor: pointer;
+    font-size: 17px;
+    line-height: 20px;
+    padding: 14px 16px;
+    width: 100%;
+    border: 1px solid #dddfe2;
+    vertical-align: middle;
+    vertical-align: middle;
+    border-radius: 6px;
+    color: #1d2129;
 }
 
 .submit-btn {
-    align-self: center;
     padding: 12px 18px;
-    background-color: var(--blue);
     color: white;
-    border-radius: 8%;
+    width: 100%;
+    background-color: #1877f2;
+    border: none;
+    font-size: 20px;
+    border-radius: 6px;
 }
 
-.submit-btn + a {
-    align-self: center;
+.separator {
+    align-items: center;
+    border-bottom: 1px solid #dadde1;
+    display: flex;
+    margin: 5px 16px;
+    text-align: center;
+    color: rgb(28, 30, 33);
+}
+
+#register-link {
+    color: white;
+    background-color: rgb(66, 183, 42);
+    border-radius: 6px;
+    border: none;
+    box-sizing: content-box;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 48px;
+    padding: 0px 16px;
+    text-decoration: none;
+    vertical-align: middle;
 }
 
 .warning-txt {
     display: block;
     text-align: center;
 }
-
