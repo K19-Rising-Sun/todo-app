@@ -63,95 +63,94 @@ function renderToDo() {
 
 
 //Function to call the api
-let EditApi = async (toDoId: string):Promise<void>=>{
+let EditApi = async (toDoId: string): Promise<void> => {
     const formData = new FormData()
-    const {category,title,description}=toDoList[toDoId]
-    formData.append('id',toDoId)
-    formData.append('category',category)
-    formData.append('title',title)
-    formData.append('description',description)
-    const response = await fetch('/todo',{
+    const { category, title, description } = toDoList[toDoId]
+    formData.append('id', toDoId)
+    formData.append('category', category)
+    formData.append('title', title)
+    formData.append('description', description)
+    const response = await fetch('/todo', {
         method: 'PUT',
         body: formData
     })
-    if(response.status<400){
-        const {title,category,description} = await response.json()
-        toDoList[toDoId]={...toDoList[toDoId],title,category,description}
+    if (response.status < 400) {
+        const { title, category, description } = await response.json()
+        toDoList[toDoId] = { ...toDoList[toDoId], title, category, description }
         return
     }
 
     throw new Error("Failed to edit todo")
 }
 
-let loadToDoFunc = async ():Promise<void> => {
+let loadToDoFunc = async (): Promise<void> => {
     const response = await fetch('/todo')
-    if(response.status<400){
+    if (response.status < 400) {
         const newToDoList = await response.json()
-        for( const {id,category,title,description,is_done} of newToDoList){
-            toDoList[id]={category,title,description,is_done}
+        if (newToDoList !== null) {
+            for (const { id, category, title, description, is_done } of newToDoList) {
+                toDoList[id] = { category, title, description, is_done }
+            }
         }
-        renderToDo()
-        return
     }
-
-    throw new Error("Failed to load todo")
+    renderToDo()
 }
 
-let deleteToDoFunc = async(toDoId: string): Promise<void> => {
-    const response = await fetch('/todo/'+toDoId,{
-        method:'DELETE'
+let deleteToDoFunc = async (toDoId: string): Promise<void> => {
+    const response = await fetch('/todo/' + toDoId, {
+        method: 'DELETE'
     })
-    if(response.status<400){
+    if (response.status < 400) {
         delete toDoList[toDoId]
         return
     }
     throw new Error('Can\'t delete todo')
 }
 
-let checkToDoFunc = async (toDoId: string):Promise<void>=>{
+let checkToDoFunc = async (toDoId: string): Promise<void> => {
     const formData = new FormData()
-    formData.append('id',toDoId)
-    formData.append('is_done',JSON.stringify(!(toDoList[toDoId].is_done)))
-    const response = await fetch('/todo',{
+    formData.append('id', toDoId)
+    formData.append('is_done', JSON.stringify(!(toDoList[toDoId].is_done)))
+    const response = await fetch('/todo', {
         method: 'PUT',
         body: formData
     })
-    if(response.status<400){
-        const {is_done} = await response.json()
-        toDoList[toDoId].is_done=is_done
+    if (response.status < 400) {
+        const { is_done } = await response.json()
+        toDoList[toDoId].is_done = is_done
         return
     }
 
     throw new Error("Failed to check todo")
 }
 
-let addToDoFunc = async (newToDo: IToDo): Promise<void> =>{
+let addToDoFunc = async (newToDo: IToDo): Promise<void> => {
     const formData = new FormData()
-    const {category,title,description}=newToDo
-    formData.append('category',category)
-    formData.append('title',title)
-    formData.append('description',description)
-    const response = await fetch('/todo',{
+    const { category, title, description } = newToDo
+    formData.append('category', category)
+    formData.append('title', title)
+    formData.append('description', description)
+    const response = await fetch('/todo', {
         method: 'POST',
         body: formData
     })
-    if(response.status<400){
-        const {id,title,category,description,is_done} = await response.json()
-        toDoList[id]={title,category,description,is_done}
+    if (response.status < 400) {
+        const { id, title, category, description, is_done } = await response.json()
+        toDoList[id] = { title, category, description, is_done }
         renderToDo()
         return
     }
 
     throw new Error('Failed to add todo')
-} 
+}
 
-let searchToDoFunc = async (title: string, category: string): Promise<void>=>{
+let searchToDoFunc = async (title: string, category: string): Promise<void> => {
     const response = await fetch(`/todo?title=${title}&category=${category}`)
-    if(response.status<400){
+    if (response.status < 400) {
         const newToDoList = await response.json()
-        toDoList={}
-        for( const {id,category,title,description,is_done} of newToDoList){
-            toDoList[id]={category,title,description,is_done}
+        toDoList = {}
+        for (const { id, category, title, description, is_done } of newToDoList) {
+            toDoList[id] = { category, title, description, is_done }
         }
         renderToDo()
         return
