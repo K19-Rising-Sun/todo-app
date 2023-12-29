@@ -1,19 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap");
 
 :root {
-    --blue: rgb(40, 77, 244);
-    --white: rgb(250, 247, 247);
-    --yellow: rgb(244, 236, 8);
-    --dark-yellow: rgb(243, 188, 7);
-    --light-yellow: rgba(255 251 144 / 59%);
-    --green: rgb(17, 233, 75);
-    --light-green: rgba(155, 219, 164, 0.726);
+    --sky-blue: #1e90ff;
+    --light-gray: rgba(0, 0, 0, 0.1);
     --red: rgb(240, 56, 14);
 }
 
 body {
     font-family: "Roboto", sans-serif;
-    background-color: var(--light-green);
+    background-color: white;
 }
 
 * {
@@ -201,7 +196,7 @@ h3 {
 }
 
 .input-container > label {
-    color: var(--blue);
+    color: black;
     cursor: pointer;
 }
 

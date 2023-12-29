@@ -24,7 +24,7 @@ body{
     margin-right: 8px;
     margin-top: 8px;
     font-size: 18px;
-    color: var(--blue);
+    color: var(--sky-blue);
     cursor: pointer;
 }
 
@@ -53,9 +53,9 @@ body{
 
 .search-bars input{
     outline: none;
-    border: none;
+    background-color: var(--light-gray);
+    border: 1px solid black;
 }
-
 
 .todo-states{
     display: flex;
@@ -67,19 +67,19 @@ body{
 }
 
 .todo-states.all>.all-state{
-    color: var(--blue);
+    color: var(--sky-blue);
 }
 
 .todo-states.done>.done-state{
-    color: var(--blue);
+    color: var(--sky-blue);
 }
 
 .todo-states.undone>.undone-state{
-    color: var(--blue);
+    color: var(--sky-blue);
 }
 
 .todo-states p:hover{
-    color: var(--blue);
+    color: var(--sky-blue);
 }
 
 .todo-section{
@@ -91,7 +91,7 @@ body{
 .todo-container{
     height: 100%;
     padding: 12px 8px;
-    background: rgb(90, 243, 166);
+    background: white;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -101,12 +101,13 @@ body{
 }
 
 .todo,.add-todo{
-    background-color: var(--dark-yellow);
+    background-color: var(--light-gray);
     position: relative;
     max-width: 250px;
     width: 100%;
     height: 250px;
     border-radius: 12px;
+    border: 1px solid black;
     padding: 16px;
 }
 
@@ -115,11 +116,11 @@ body{
 }
 
 .todo.complete .done-icon{
-    color: var(--green);
+    color: darkgreen;
 }
 
 .category{
-    color: var(--blue);
+    color: var(--sky-blue);
 }
 
 .todo-header{
@@ -150,11 +151,11 @@ body{
 
 
 .edit-icon:hover{
-    color: var(--blue);
+    color: var(--sky-blue);
 }
 
 .done-icon:hover{
-    color: var(--green);
+    color: darkgreen;
 }
 
 .delete-icon:hover{
@@ -169,7 +170,6 @@ body{
 }
 
 .todo input[type="text"]{
-    background-color: var(--dark-yellow);
     width: 70%;
     border: none;
     border-bottom: black 2px solid;
@@ -177,7 +177,6 @@ body{
 }
 
 .todo textarea, .add-new-todo textarea, .add-new-todo input[type='text']{
-    background-color: var(--light-yellow);
     border: black 2px solid;
     outline: none;
     width: 100%;
@@ -191,10 +190,11 @@ body{
 }
 
 .submit-btn{
-    background-color: var(--blue);
+    background-color: var(--sky-blue);
     color: white;
     padding: 8px 10px;
     outline: none;
+    border: none;
     cursor: pointer;
     border-radius: 8px;
 }
@@ -206,7 +206,7 @@ body{
 }
 
 .add-todo:hover span{
-    color: var(--blue);
+    color: var(--sky-blue);
 }
 
 .add-new-todo-container{
@@ -215,6 +215,7 @@ body{
     display: none;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(8px);
     z-index: 4;
     position: fixed;
 }
@@ -232,8 +233,8 @@ body{
 }
 
 .add-new-todo{
+    background: var(--light-gray);
     position: relative;
-    background: var(--dark-yellow);
     border-radius: 8px;
     padding: 12px;
     width: 100%;
@@ -273,4 +274,3 @@ body{
 .empty-txt{
     font-size: 26px;
 }
-
