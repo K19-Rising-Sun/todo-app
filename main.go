@@ -26,7 +26,7 @@ func main() {
 		return
 	}
 
-	server := server.NewServer(3000, db)
+	server := server.NewServer(8000, db)
 	err = server.ListenAndServe()
 	if err != nil {
 		panic(fmt.Sprintf("cannot start server: %s", err))
