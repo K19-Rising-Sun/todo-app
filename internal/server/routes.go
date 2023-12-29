@@ -148,7 +148,7 @@ func (s *Server) TodoQueryHandler(c *gin.Context) {
 		todos, err = database.New(s.db).SearchTodos(ctx, database.SearchTodosParams{
 			Username: username,
 			Query: sql.NullString{
-				String: fmt.Sprintf("category: %s and title: %s", category, title),
+				String: fmt.Sprintf("category: %s title: %s", category, title),
 				Valid:  true,
 			},
 		})
