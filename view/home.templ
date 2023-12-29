@@ -50,8 +50,8 @@ templ Home(userName string) {
 				</div>
 				<div class="todo-wrapper">
 					<button id="logout-btn">
-                        <a href="/logout" style="text-decoration: none;">Logout</a>
-                    </button>
+						<a href="/logout" style="text-decoration: none;">Logout</a>
+					</button>
 					<h1>{ userName } 's todo</h1>
 					<form class="search-section">
 						<span>Search by:</span>
@@ -61,6 +61,11 @@ templ Home(userName string) {
 						</div>
 						<input type="submit" value="Search" class="submit-btn"/>
 					</form>
+					<div class="todo-states all">
+						<p class="all-state">All</p>
+						<p class="done-state">Done</p>
+						<p class="undone-state">Undone</p>
+					</div>
 					<div class="todo-section">
 						<div class="todo-container">
 							<button class="add-todo">
@@ -72,11 +77,6 @@ templ Home(userName string) {
 						<div class="spinner-conatiner">
 							<div class="spinner"></div>
 						</div>
-					</div>
-					<div class="todo-states all">
-						<p class="all-state">All</p>
-						<p class="done-state">Done</p>
-						<p class="undone-state">Undone</p>
 					</div>
 				</div>
 			</div>
