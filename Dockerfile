@@ -10,10 +10,12 @@ RUN go mod download
 COPY . ./
 
 RUN apk update && apk upgrade
-RUN apk add --no-cache sqlite build-base musl-dev
+RUN apk add --no-cache sqlite build-base musl-dev nodejs npm
 RUN go install github.com/a-h/templ/cmd/templ@v0.2.476
+RUN npm install
 
 RUN templ generate
 RUN go build --tags 'fts5' -v -o server
+RUN npm run build
 
 CMD ["/app/server"]
