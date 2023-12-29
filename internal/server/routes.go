@@ -181,6 +181,7 @@ func (s *Server) TodoQueryHandler(c *gin.Context) {
 	}
 
 	// c.HTML(http.StatusOK, "", component.TodoList(todos))
+    fmt.Println(todos)
 	c.JSON(http.StatusOK, todos)
 }
 func (s *Server) TodoAddHandler(c *gin.Context) {
@@ -243,17 +244,12 @@ func (s *Server) TodoPutHandler(c *gin.Context) {
 	}
 	is_done_raw, err := strconv.ParseBool(c.PostForm("is_done"))
 	is_done := sql.NullInt64{}
-	if err != nil {
-		fmt.Println(err)
-		c.Status(http.StatusBadRequest)
-		return
-	}
 	if is_done_raw == true {
 		is_done = sql.NullInt64{
 			Int64: int64(1),
 			Valid: true,
 		}
-	} else {
+	} else if err == nil {
 		is_done = sql.NullInt64{
 			Int64: int64(0),
 			Valid: true,
@@ -268,8 +264,6 @@ func (s *Server) TodoPutHandler(c *gin.Context) {
 		Description: description,
 		IsDone:      is_done,
 	})
-	test, err := json.Marshal(updated_todo)
-	fmt.Println(test)
 	if err != nil {
 		fmt.Println(err)
 		c.Status(http.StatusInternalServerError)
